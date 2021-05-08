@@ -14,6 +14,7 @@ import joblib
 import config
 import utils
 from tensorflow.python.framework.ops import disable_eager_execution
+import scalers.TanhScaler
 
 disable_eager_execution()
 

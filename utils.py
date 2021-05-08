@@ -7,11 +7,19 @@ from config import *
 
 
 def read_dataframe(path, columns):
-    dataframe = pd.read_csv(path)
+    if 'csv' in path:
+        dataframe = pd.read_csv(path)
+    else:
+        dataframe = pd.read_csv(path, sep=" ")
     dataframe = dataframe.filter(columns)
     dataframe = dataframe.astype(float)
     return dataframe
 
+def read_dataframe_csv(path, columns):
+    dataframe = pd.read_csv(path)
+    dataframe = dataframe.filter(columns)
+    dataframe = dataframe.astype(float)
+    return dataframe
 
 def create_column_associated_with_num_task(dataframe, columns):
     for x, y in columns.items():
@@ -46,7 +54,7 @@ def prepare_dataframe():
     print(dataframe['queue_time_till_fully_scheduled'])
     dataframe = create_column_associated_with_num_task(dataframe, ADDITIONAL_COLUMNS)
     print(dataframe)
-    dataframe = transform_submission_time(dataframe)
+    #dataframe = transform_submission_time(dataframe)
     if config.UNTAIL:
         dataframe = untail_column(dataframe, config.PREDICTED_COLUMN_NAME, config.UNTAIL_MIN_PERCENTILE, config.UNTAIL_MAX_PERCENTILE)
     return dataframe
@@ -57,7 +65,7 @@ def prepare_mesos_dataframe():
     print(dataframe['queue_time_till_fully_scheduled'])
     dataframe = create_column_associated_with_num_task(dataframe, ADDITIONAL_COLUMNS)
     print(dataframe)
-    dataframe = transform_submission_time(dataframe)
+    #dataframe = transform_submission_time(dataframe)
     if config.UNTAIL:
         dataframe = untail_column(dataframe, config.PREDICTED_COLUMN_NAME, config.UNTAIL_MIN_PERCENTILE, config.UNTAIL_MAX_PERCENTILE)
     return dataframe
@@ -68,7 +76,7 @@ def prepare_omega_dataframe():
     print(dataframe['queue_time_till_fully_scheduled'])
     dataframe = create_column_associated_with_num_task(dataframe, ADDITIONAL_COLUMNS)
     print(dataframe)
-    dataframe = transform_submission_time(dataframe)
+    #dataframe = transform_submission_time(dataframe)
     if config.UNTAIL:
         dataframe = untail_column(dataframe, config.PREDICTED_COLUMN_NAME, config.UNTAIL_MIN_PERCENTILE, config.UNTAIL_MAX_PERCENTILE)
     return dataframe

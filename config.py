@@ -8,8 +8,8 @@ OMEGA_MODEL = ROOT_DIR + "models/omega"
 BATCH_SIZE = 30
 EPOCHS = 10
 ANN_BATCH_SIZE = 32
-UNTAIL = True
-UNTAIL_MAX_PERCENTILE = 0.65
+UNTAIL = False
+UNTAIL_MAX_PERCENTILE = 0.6
 UNTAIL_MIN_PERCENTILE = 0.0
 UNTAIL_MODE = "remove"  # or "collapse"
 TEST_SPLIT = 0.1
@@ -37,7 +37,8 @@ SELECTED_COLUMNS = [
     'num_tasks',
     # 'cpus_per_batch',
     # 'mem_per_batch',
-    'submission_time_transformed',
+    #'submission_time_transformed',
+    'submission_time',
     'queue_time_till_fully_scheduled'
 ]
 # CPU y MEM per batch = 5

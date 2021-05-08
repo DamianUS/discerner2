@@ -59,7 +59,12 @@ y_predicted_transformed = np.c_[
     np.ones(y_predicted_transformed.shape[0]), np.ones(y_predicted_transformed.shape[0]), np.ones(
         y_predicted_transformed.shape[0]), np.ones(y_predicted_transformed.shape[0]), y_predicted_transformed]
 
-y_predicted = scaler.inverse_transform(y_predicted_transformed)
+#TanhScaler
+if 'tanh' in config.SCALER:
+    y_predicted = scaler.inverse_transform(y_predicted_transformed, config.SELECTED_COLUMNS)
+#QuantileScaler
+elif 'quantile' in config.SCALER:
+    y_predicted = scaler.inverse_transform(y_predicted_transformed)
 y_predicted = y_predicted[:, config.PREDICTED_COLUMN_INDEX]
 y_test, y_predicted = y_test.reshape(-1, 1), y_predicted.reshape(-1, 1)
 y_error = y_test - y_predicted
@@ -79,6 +84,8 @@ plt.xlabel("# Job")
 plt.ylabel("queue_time_till_fully_scheduled")
 plt.legend()
 plt.show()
+
+print("mode error: ", mode, "mean error: ", mean, "median error: ", median, "p75 error: ", p75, "p90 error: ", p90)
 
 # plt.figure(figsize=(14, 5))
 # plt.plot(y_test, color='r', label="Real value")

@@ -2,12 +2,13 @@ import pandas as pd
 import numpy as np
 import joblib
 
-from BiTanhScaler import BiTanhScaler
-
+import config
+import utils
 from config import *
+from scalers.TanhScaler import TanhScaler
 
 def prepare_dataframe(path, columns):
-    dataframe = pd.read_csv(path)
+    dataframe = pd.read_csv(path, sep=' ')
     dataframe = dataframe.filter(columns)
     dataframe = dataframe.astype(float)
     return dataframe
@@ -16,9 +17,9 @@ def prepare_dataframe(path, columns):
 def create_column_associated_with_num_task(dataframe, columns):
     for x, y in columns.items():
         dataframe[x] = dataframe.apply(lambda row: row['num_tasks'] * row[y], axis=1)
-    to_delete = [*columns.values()]
-    to_delete.append('num_tasks')
-    dataframe = dataframe.drop(columns=to_delete)
+    #to_delete = [*columns.values()]
+    #to_delete.append('num_tasks')
+    #dataframe = dataframe.drop(columns=to_delete)
     return dataframe
 
 
@@ -31,7 +32,9 @@ def transform_submission_time(dataframe):
 
 def prepare_data_for_model(dataframe, columns, scaler):
     data_training = dataframe[columns]
-    data_training = scaler.fit_transform(data_training, PREDICTED_COLUMN_NAME)
+    #BiTanhScaler
+    #data_training = scaler.fit_transform(data_training, PREDICTED_COLUMN_NAME)
+    data_training = scaler.fit_transform(data_training)
     X_train = []
     Y_train = []
     for i in range(60, data_training.shape[0]):
@@ -43,20 +46,17 @@ def prepare_data_for_model(dataframe, columns, scaler):
 
 # DIVISION OF DATA BETWEEN TEST AND TRAINING
 
-dataframe = prepare_dataframe(DATA, COLUMNS)
+dataframe = utils.prepare_dataframe()
 print(dataframe['queue_time_till_fully_scheduled'])
 
-dataframe = create_column_associated_with_num_task(dataframe, ADDITIONAL_COLUMNS)
-print(dataframe)
-
-dataframe = transform_submission_time(dataframe)
-data_test = dataframe[:1000]
-dataframe_training = dataframe[1000:dataframe.shape[0]]
+training_size = int(config.TEST_SPLIT * dataframe.shape[0])
+data_test = dataframe[:training_size]
+dataframe_training = dataframe[training_size:dataframe.shape[0]]
 
 # SCALER GENERATION
 
 print(dataframe_training[SELECTED_COLUMNS])
-scaler = BiTanhScaler(0.75)
+scaler = TanhScaler()
 X, Y = prepare_data_for_model(dataframe_training, SELECTED_COLUMNS, scaler)
 
 #SCALER TESTS
@@ -67,5 +67,5 @@ print(scaler.max)
 print(scaler.min)
 
 #SAVE SCALER
-scaler_filename = "./scaler_tanh.save"
+scaler_filename = "./tanh_scaler.save"
 joblib.dump(scaler, scaler_filename)
