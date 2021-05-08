@@ -14,7 +14,6 @@ import joblib
 import config
 import utils
 from tensorflow.python.framework.ops import disable_eager_execution
-import scalers.TanhScaler
 
 disable_eager_execution()
 
@@ -43,7 +42,6 @@ def plot_metric(history, metric, title):
     plt.ylabel(metric.capitalize())
     plt.legend()
     plt.show()
-
 
 scaler = joblib.load(config.SCALER)
 dataframe = utils.prepare_mesos_dataframe()

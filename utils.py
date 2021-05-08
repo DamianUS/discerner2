@@ -4,7 +4,7 @@ import joblib
 
 import config
 from config import *
-
+from scalers.NTanhScaler import NTanhScaler
 
 def read_dataframe(path, columns):
     if 'csv' in path:
@@ -54,7 +54,7 @@ def prepare_dataframe():
     print(dataframe['queue_time_till_fully_scheduled'])
     dataframe = create_column_associated_with_num_task(dataframe, ADDITIONAL_COLUMNS)
     print(dataframe)
-    #dataframe = transform_submission_time(dataframe)
+    dataframe = transform_submission_time(dataframe)
     if config.UNTAIL:
         dataframe = untail_column(dataframe, config.PREDICTED_COLUMN_NAME, config.UNTAIL_MIN_PERCENTILE, config.UNTAIL_MAX_PERCENTILE)
     return dataframe
@@ -65,7 +65,7 @@ def prepare_mesos_dataframe():
     print(dataframe['queue_time_till_fully_scheduled'])
     dataframe = create_column_associated_with_num_task(dataframe, ADDITIONAL_COLUMNS)
     print(dataframe)
-    #dataframe = transform_submission_time(dataframe)
+    dataframe = transform_submission_time(dataframe)
     if config.UNTAIL:
         dataframe = untail_column(dataframe, config.PREDICTED_COLUMN_NAME, config.UNTAIL_MIN_PERCENTILE, config.UNTAIL_MAX_PERCENTILE)
     return dataframe
@@ -76,7 +76,7 @@ def prepare_omega_dataframe():
     print(dataframe['queue_time_till_fully_scheduled'])
     dataframe = create_column_associated_with_num_task(dataframe, ADDITIONAL_COLUMNS)
     print(dataframe)
-    #dataframe = transform_submission_time(dataframe)
+    dataframe = transform_submission_time(dataframe)
     if config.UNTAIL:
         dataframe = untail_column(dataframe, config.PREDICTED_COLUMN_NAME, config.UNTAIL_MIN_PERCENTILE, config.UNTAIL_MAX_PERCENTILE)
     return dataframe
